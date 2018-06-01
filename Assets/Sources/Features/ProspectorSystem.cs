@@ -13,6 +13,8 @@ namespace Bartok
             this.Add(new CreateDeckSystem(contexts));
 
             this.Add(new CreateCardsSystem(contexts));
+
+            this.Add(new CreateGameBoardSystem(contexts));
         }
     }
 }

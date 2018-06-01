@@ -8,27 +8,45 @@
 //------------------------------------------------------------------------------
 public static class GameComponentsLookup {
 
-    public const int BartokCard = 0;
-    public const int BartokDeck = 1;
-    public const int BartokDeckResMgr = 2;
-    public const int BartokGameObject = 3;
-    public const int Position = 4;
+    public const int CardCache = 0;
+    public const int Card = 1;
+    public const int CardProspector = 2;
+    public const int CardState = 3;
+    public const int Deck = 4;
+    public const int DeckResMgr = 5;
+    public const int FaceUp = 6;
+    public const int GameBoard = 7;
+    public const int GameObject = 8;
+    public const int HiddenBy = 9;
+    public const int Position = 10;
 
-    public const int TotalComponents = 5;
+    public const int TotalComponents = 11;
 
     public static readonly string[] componentNames = {
-        "BartokCard",
-        "BartokDeck",
-        "BartokDeckResMgr",
-        "BartokGameObject",
+        "CardCache",
+        "Card",
+        "CardProspector",
+        "CardState",
+        "Deck",
+        "DeckResMgr",
+        "FaceUp",
+        "GameBoard",
+        "GameObject",
+        "HiddenBy",
         "Position"
     };
 
     public static readonly System.Type[] componentTypes = {
+        typeof(Bartok.CardCacheComponent),
         typeof(Bartok.CardComponent),
+        typeof(Bartok.CardProspectorComponent),
+        typeof(Bartok.CardStateComponent),
         typeof(Bartok.DeckComponent),
         typeof(Bartok.DeckResMgrComponent),
+        typeof(Bartok.FaceUpComponent),
+        typeof(Bartok.GameBoardComponent),
         typeof(Bartok.GameObjectComponent),
+        typeof(Bartok.HiddenByComponent),
         typeof(PositionComponent)
     };
 }

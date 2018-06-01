@@ -22,7 +22,7 @@ namespace Bartok
             }
             var deckAnchor = anchorGO.transform;
 
-            var resMgr = this.game.bartokDeckResMgr.value;
+            var resMgr = this.game.deckResMgr.value;
             var dictSuits = new Dictionary<string, Sprite>()
             {
                 {"C", resMgr.suitClub},
@@ -40,12 +40,13 @@ namespace Bartok
                     cardNames.Add(s + (i+1));
                 }
             }
+            List<GameEntity> cards = new List<GameEntity>();
 
             for (int i = 0; i < cardNames.Count; i++)
             {
                 var cgo = GameObject.Instantiate(resMgr.prefabCard);
                 cgo.transform.parent = deckAnchor;
-                cgo.transform.localPosition = new Vector3( (i%13) * 3, i/13*4, 0 );
+                cgo.transform.localPosition = new Vector3( (i%13) * 3, i/13*4, 0 ) * 1000;
 
                 var suit = cardNames[i][0].ToString();
                 var rank = int.Parse(cardNames[i].Substring(1));
@@ -61,7 +62,7 @@ namespace Bartok
                 var decoGOs = new List<GameObject>();
                 GameObject tGO;
                 SpriteRenderer tSR;
-                foreach (var deco in this.game.bartokDeck.decotators)
+                foreach (var deco in this.game.deck.decotators)
                 {
                     if (deco.type == "suit")
                     {
@@ -117,12 +118,16 @@ namespace Bartok
                 }
 
                 var e = this.game.CreateEntity();
-                e.AddBartokCard(cardNames[i], suit, rank, cardDef, decoGOs, color, colS);
+                e.AddCard(cardNames[i], suit, rank, cardDef, decoGOs, color, colS);
+                e.AddGameObject(cgo);
+                cards.Add(e);
             }
+
+            this.game.SetCardCache(cards);
         }
 
         private CardDefinition GetCardDefinitionByRank(int rnk) {
-            foreach (var item in this.game.bartokDeck.cardDefs)
+            foreach (var item in this.game.deck.cardDefs)
             {
                 if (item.rank == rnk)
                 {
@@ -133,7 +138,7 @@ namespace Bartok
         }
 
         private Sprite GetFace(string faceS) {
-            var resMgr = this.game.bartokDeckResMgr.value;
+            var resMgr = this.game.deckResMgr.value;
             foreach (var ts in resMgr.faceSprites)
             {
                 if (ts.name == faceS)

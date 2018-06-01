@@ -8,25 +8,25 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public Bartok.GameObjectComponent bartokGameObject { get { return (Bartok.GameObjectComponent)GetComponent(GameComponentsLookup.BartokGameObject); } }
-    public bool hasBartokGameObject { get { return HasComponent(GameComponentsLookup.BartokGameObject); } }
+    public Bartok.FaceUpComponent faceUp { get { return (Bartok.FaceUpComponent)GetComponent(GameComponentsLookup.FaceUp); } }
+    public bool hasFaceUp { get { return HasComponent(GameComponentsLookup.FaceUp); } }
 
-    public void AddBartokGameObject(UnityEngine.GameObject newValue) {
-        var index = GameComponentsLookup.BartokGameObject;
-        var component = CreateComponent<Bartok.GameObjectComponent>(index);
+    public void AddFaceUp(bool newValue) {
+        var index = GameComponentsLookup.FaceUp;
+        var component = CreateComponent<Bartok.FaceUpComponent>(index);
         component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplaceBartokGameObject(UnityEngine.GameObject newValue) {
-        var index = GameComponentsLookup.BartokGameObject;
-        var component = CreateComponent<Bartok.GameObjectComponent>(index);
+    public void ReplaceFaceUp(bool newValue) {
+        var index = GameComponentsLookup.FaceUp;
+        var component = CreateComponent<Bartok.FaceUpComponent>(index);
         component.value = newValue;
         ReplaceComponent(index, component);
     }
 
-    public void RemoveBartokGameObject() {
-        RemoveComponent(GameComponentsLookup.BartokGameObject);
+    public void RemoveFaceUp() {
+        RemoveComponent(GameComponentsLookup.FaceUp);
     }
 }
 
@@ -40,17 +40,17 @@ public partial class GameEntity {
 //------------------------------------------------------------------------------
 public sealed partial class GameMatcher {
 
-    static Entitas.IMatcher<GameEntity> _matcherBartokGameObject;
+    static Entitas.IMatcher<GameEntity> _matcherFaceUp;
 
-    public static Entitas.IMatcher<GameEntity> BartokGameObject {
+    public static Entitas.IMatcher<GameEntity> FaceUp {
         get {
-            if (_matcherBartokGameObject == null) {
-                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.BartokGameObject);
+            if (_matcherFaceUp == null) {
+                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.FaceUp);
                 matcher.componentNames = GameComponentsLookup.componentNames;
-                _matcherBartokGameObject = matcher;
+                _matcherFaceUp = matcher;
             }
 
-            return _matcherBartokGameObject;
+            return _matcherFaceUp;
         }
     }
 }

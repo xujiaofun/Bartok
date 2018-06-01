@@ -8,11 +8,11 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public Bartok.CardComponent bartokCard { get { return (Bartok.CardComponent)GetComponent(GameComponentsLookup.BartokCard); } }
-    public bool hasBartokCard { get { return HasComponent(GameComponentsLookup.BartokCard); } }
+    public Bartok.CardComponent card { get { return (Bartok.CardComponent)GetComponent(GameComponentsLookup.Card); } }
+    public bool hasCard { get { return HasComponent(GameComponentsLookup.Card); } }
 
-    public void AddBartokCard(string newName, string newSuit, int newRank, Bartok.CardDefinition newDef, System.Collections.Generic.List<UnityEngine.GameObject> newDecoGOs, UnityEngine.Color newColor, string newColS) {
-        var index = GameComponentsLookup.BartokCard;
+    public void AddCard(string newName, string newSuit, int newRank, Bartok.CardDefinition newDef, System.Collections.Generic.List<UnityEngine.GameObject> newDecoGOs, UnityEngine.Color newColor, string newColS) {
+        var index = GameComponentsLookup.Card;
         var component = CreateComponent<Bartok.CardComponent>(index);
         component.name = newName;
         component.suit = newSuit;
@@ -24,8 +24,8 @@ public partial class GameEntity {
         AddComponent(index, component);
     }
 
-    public void ReplaceBartokCard(string newName, string newSuit, int newRank, Bartok.CardDefinition newDef, System.Collections.Generic.List<UnityEngine.GameObject> newDecoGOs, UnityEngine.Color newColor, string newColS) {
-        var index = GameComponentsLookup.BartokCard;
+    public void ReplaceCard(string newName, string newSuit, int newRank, Bartok.CardDefinition newDef, System.Collections.Generic.List<UnityEngine.GameObject> newDecoGOs, UnityEngine.Color newColor, string newColS) {
+        var index = GameComponentsLookup.Card;
         var component = CreateComponent<Bartok.CardComponent>(index);
         component.name = newName;
         component.suit = newSuit;
@@ -37,8 +37,8 @@ public partial class GameEntity {
         ReplaceComponent(index, component);
     }
 
-    public void RemoveBartokCard() {
-        RemoveComponent(GameComponentsLookup.BartokCard);
+    public void RemoveCard() {
+        RemoveComponent(GameComponentsLookup.Card);
     }
 }
 
@@ -52,17 +52,17 @@ public partial class GameEntity {
 //------------------------------------------------------------------------------
 public sealed partial class GameMatcher {
 
-    static Entitas.IMatcher<GameEntity> _matcherBartokCard;
+    static Entitas.IMatcher<GameEntity> _matcherCard;
 
-    public static Entitas.IMatcher<GameEntity> BartokCard {
+    public static Entitas.IMatcher<GameEntity> Card {
         get {
-            if (_matcherBartokCard == null) {
-                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.BartokCard);
+            if (_matcherCard == null) {
+                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.Card);
                 matcher.componentNames = GameComponentsLookup.componentNames;
-                _matcherBartokCard = matcher;
+                _matcherCard = matcher;
             }
 
-            return _matcherBartokCard;
+            return _matcherCard;
         }
     }
 }

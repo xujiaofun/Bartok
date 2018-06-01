@@ -70,12 +70,11 @@ namespace Bartok
                 cardDefs.Add(cardDef);
             }
 
-            var deckEntity = this.game.CreateEntity();
-            deckEntity.AddBartokDeck(decorators, cardDefs);
+            this.game.SetDeck(decorators, cardDefs);
 
             var prefab = Resources.Load<GameObject>("DeckResMgr");
             var resMgr = prefab.GetComponent<DeckResMgr>();
-            deckEntity.AddBartokDeckResMgr(resMgr);
+            this.game.SetDeckResMgr(resMgr);
         }
     }
 }
