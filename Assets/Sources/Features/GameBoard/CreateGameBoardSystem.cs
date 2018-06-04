@@ -2,12 +2,14 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Entitas.Unity;
+using System;
 
 namespace Bartok
 {
     public sealed class CreateGameBoardSystem : IInitializeSystem
     {
         GameContext game;
+        Transform layoutAnchor;
 
         public CreateGameBoardSystem(Contexts contexts)
         {
@@ -84,44 +86,49 @@ namespace Bartok
 
         private void SetupGameBoard(GameBoardComponent gameBoard)
         {
-            var tGO = GameObject.Find("_LayoutAnchor");
-            if (tGO == null)
-            {
-                tGO = new GameObject("_LayoutAnchor");
-                tGO.transform.position = Vector3.zero;
-            }
-            var layoutAnchor = tGO.transform;
+            game.SetGameData(null, new List<GameEntity>(), new List<GameEntity>(), new List<GameEntity>());
 
             var cards = this.game.cardCache.value;
             cards.Shuffle();
-
+            int index = 0;
             for (int i = 0; i < gameBoard.slotDefs.Count; i++)
             {
                 var tSD = gameBoard.slotDefs[i];
-                var e = cards[i];
+                var e = cards[index];
                 e.AddCardState(CardState.tableau);
                 e.AddCardProspector(tSD.id, tSD);
                 e.AddFaceUp(tSD.faceUp);
-
-                var cGO = e.gameObject.value;
-                cGO.transform.parent = layoutAnchor;
-                cGO.transform.localPosition = new Vector3(
+                e.AddPosition(new Vector3(
                     gameBoard.multiplier.x * tSD.x,
                     gameBoard.multiplier.y * tSD.y,
                     -tSD.layerID
-                );
-
-                cGO.Link(e, this.game);
-                cGO.AddComponent<CardViewBehaviour>();
-
-                var spriteRenders = cGO.GetComponentsInChildren<SpriteRenderer>();
-                foreach (var tSR in spriteRenders)
-                {
-                    tSR.sortingLayerName = tSD.layerName;
-                }
-
+                ));
+                e.ReplaceSortOrder(0);
+                game.gameData.tableau.Add(e);
+                index++;
             }
 
+            foreach (var card in game.gameData.tableau)
+            {
+                var tSD = card.cardProspector.slotDef;
+                var hidden = new List<GameEntity>();
+                foreach (var c in game.gameData.tableau) {
+                    if (tSD.hiddenBy.Contains(c.cardProspector.layoutID))
+                    {
+                        hidden.Add(c);
+                    }
+                }
+                card.AddHiddenBy(hidden);
+            }
+
+            game.MoveToTarget(cards[index]);
+            index++;
+
+            for (; index < cards.Count; index++)
+            {
+                game.gameData.drawPile.Add(cards[index]);
+            }
+            game.UpdateDrawPile();
         }
     }
 }

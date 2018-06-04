@@ -14,13 +14,19 @@ public static class GameComponentsLookup {
     public const int CardState = 3;
     public const int Deck = 4;
     public const int DeckResMgr = 5;
-    public const int FaceUp = 6;
-    public const int GameBoard = 7;
-    public const int GameObject = 8;
-    public const int HiddenBy = 9;
-    public const int Position = 10;
+    public const int DrawPile = 6;
+    public const int FaceUp = 7;
+    public const int GameBoard = 8;
+    public const int GameData = 9;
+    public const int GameObject = 10;
+    public const int HiddenBy = 11;
+    public const int SortOrder = 12;
+    public const int Target = 13;
+    public const int Touch = 14;
+    public const int CardStateListener = 15;
+    public const int Position = 16;
 
-    public const int TotalComponents = 11;
+    public const int TotalComponents = 17;
 
     public static readonly string[] componentNames = {
         "CardCache",
@@ -29,10 +35,16 @@ public static class GameComponentsLookup {
         "CardState",
         "Deck",
         "DeckResMgr",
+        "DrawPile",
         "FaceUp",
         "GameBoard",
+        "GameData",
         "GameObject",
         "HiddenBy",
+        "SortOrder",
+        "Target",
+        "Touch",
+        "CardStateListener",
         "Position"
     };
 
@@ -43,10 +55,16 @@ public static class GameComponentsLookup {
         typeof(Bartok.CardStateComponent),
         typeof(Bartok.DeckComponent),
         typeof(Bartok.DeckResMgrComponent),
+        typeof(Bartok.DrawPileComponent),
         typeof(Bartok.FaceUpComponent),
         typeof(Bartok.GameBoardComponent),
+        typeof(Bartok.GameDataComponent),
         typeof(Bartok.GameObjectComponent),
         typeof(Bartok.HiddenByComponent),
+        typeof(Bartok.SortOrderComponent),
+        typeof(Bartok.TargetComponent),
+        typeof(Bartok.TouchComponent),
+        typeof(CardStateListenerComponent),
         typeof(PositionComponent)
     };
 }

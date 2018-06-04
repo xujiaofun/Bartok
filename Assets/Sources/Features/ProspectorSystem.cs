@@ -10,11 +10,14 @@ namespace Bartok
         public ProspectorSystems(Contexts contexts)
             : base("ProspectorSystems")
         {
-            this.Add(new CreateDeckSystem(contexts));
-
-            this.Add(new CreateCardsSystem(contexts));
+            this.Add(new GameStartSystem(contexts));
 
             this.Add(new CreateGameBoardSystem(contexts));
+
+            this.Add(new ProcessTouchSystem(contexts));
+
+            this.Add(new AddViewSystem(contexts));
+            this.Add(new RenderPositionSystem(contexts));
         }
     }
 }

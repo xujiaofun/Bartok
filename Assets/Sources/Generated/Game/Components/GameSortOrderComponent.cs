@@ -8,25 +8,25 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public PositionComponent position { get { return (PositionComponent)GetComponent(GameComponentsLookup.Position); } }
-    public bool hasPosition { get { return HasComponent(GameComponentsLookup.Position); } }
+    public Bartok.SortOrderComponent sortOrder { get { return (Bartok.SortOrderComponent)GetComponent(GameComponentsLookup.SortOrder); } }
+    public bool hasSortOrder { get { return HasComponent(GameComponentsLookup.SortOrder); } }
 
-    public void AddPosition(UnityEngine.Vector3 newValue) {
-        var index = GameComponentsLookup.Position;
-        var component = CreateComponent<PositionComponent>(index);
+    public void AddSortOrder(int newValue) {
+        var index = GameComponentsLookup.SortOrder;
+        var component = CreateComponent<Bartok.SortOrderComponent>(index);
         component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplacePosition(UnityEngine.Vector3 newValue) {
-        var index = GameComponentsLookup.Position;
-        var component = CreateComponent<PositionComponent>(index);
+    public void ReplaceSortOrder(int newValue) {
+        var index = GameComponentsLookup.SortOrder;
+        var component = CreateComponent<Bartok.SortOrderComponent>(index);
         component.value = newValue;
         ReplaceComponent(index, component);
     }
 
-    public void RemovePosition() {
-        RemoveComponent(GameComponentsLookup.Position);
+    public void RemoveSortOrder() {
+        RemoveComponent(GameComponentsLookup.SortOrder);
     }
 }
 
@@ -40,17 +40,17 @@ public partial class GameEntity {
 //------------------------------------------------------------------------------
 public sealed partial class GameMatcher {
 
-    static Entitas.IMatcher<GameEntity> _matcherPosition;
+    static Entitas.IMatcher<GameEntity> _matcherSortOrder;
 
-    public static Entitas.IMatcher<GameEntity> Position {
+    public static Entitas.IMatcher<GameEntity> SortOrder {
         get {
-            if (_matcherPosition == null) {
-                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.Position);
+            if (_matcherSortOrder == null) {
+                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.SortOrder);
                 matcher.componentNames = GameComponentsLookup.componentNames;
-                _matcherPosition = matcher;
+                _matcherSortOrder = matcher;
             }
 
-            return _matcherPosition;
+            return _matcherSortOrder;
         }
     }
 }

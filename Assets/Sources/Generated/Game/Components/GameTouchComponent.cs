@@ -8,25 +8,25 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public PositionComponent position { get { return (PositionComponent)GetComponent(GameComponentsLookup.Position); } }
-    public bool hasPosition { get { return HasComponent(GameComponentsLookup.Position); } }
+    public Bartok.TouchComponent touch { get { return (Bartok.TouchComponent)GetComponent(GameComponentsLookup.Touch); } }
+    public bool hasTouch { get { return HasComponent(GameComponentsLookup.Touch); } }
 
-    public void AddPosition(UnityEngine.Vector3 newValue) {
-        var index = GameComponentsLookup.Position;
-        var component = CreateComponent<PositionComponent>(index);
-        component.value = newValue;
+    public void AddTouch(GameEntity newTarget) {
+        var index = GameComponentsLookup.Touch;
+        var component = CreateComponent<Bartok.TouchComponent>(index);
+        component.target = newTarget;
         AddComponent(index, component);
     }
 
-    public void ReplacePosition(UnityEngine.Vector3 newValue) {
-        var index = GameComponentsLookup.Position;
-        var component = CreateComponent<PositionComponent>(index);
-        component.value = newValue;
+    public void ReplaceTouch(GameEntity newTarget) {
+        var index = GameComponentsLookup.Touch;
+        var component = CreateComponent<Bartok.TouchComponent>(index);
+        component.target = newTarget;
         ReplaceComponent(index, component);
     }
 
-    public void RemovePosition() {
-        RemoveComponent(GameComponentsLookup.Position);
+    public void RemoveTouch() {
+        RemoveComponent(GameComponentsLookup.Touch);
     }
 }
 
@@ -40,17 +40,17 @@ public partial class GameEntity {
 //------------------------------------------------------------------------------
 public sealed partial class GameMatcher {
 
-    static Entitas.IMatcher<GameEntity> _matcherPosition;
+    static Entitas.IMatcher<GameEntity> _matcherTouch;
 
-    public static Entitas.IMatcher<GameEntity> Position {
+    public static Entitas.IMatcher<GameEntity> Touch {
         get {
-            if (_matcherPosition == null) {
-                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.Position);
+            if (_matcherTouch == null) {
+                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.Touch);
                 matcher.componentNames = GameComponentsLookup.componentNames;
-                _matcherPosition = matcher;
+                _matcherTouch = matcher;
             }
 
-            return _matcherPosition;
+            return _matcherTouch;
         }
     }
 }
