@@ -11,27 +11,25 @@ public partial class GameEntity {
     public Bartok.CardComponent card { get { return (Bartok.CardComponent)GetComponent(GameComponentsLookup.Card); } }
     public bool hasCard { get { return HasComponent(GameComponentsLookup.Card); } }
 
-    public void AddCard(string newName, string newSuit, int newRank, Bartok.CardDefinition newDef, System.Collections.Generic.List<UnityEngine.GameObject> newDecoGOs, UnityEngine.Color newColor, string newColS) {
+    public void AddCard(string newName, string newSuit, int newRank, Bartok.CardDefinition newDef, UnityEngine.Color newColor, string newColS) {
         var index = GameComponentsLookup.Card;
         var component = CreateComponent<Bartok.CardComponent>(index);
         component.name = newName;
         component.suit = newSuit;
         component.rank = newRank;
         component.def = newDef;
-        component.decoGOs = newDecoGOs;
         component.color = newColor;
         component.colS = newColS;
         AddComponent(index, component);
     }
 
-    public void ReplaceCard(string newName, string newSuit, int newRank, Bartok.CardDefinition newDef, System.Collections.Generic.List<UnityEngine.GameObject> newDecoGOs, UnityEngine.Color newColor, string newColS) {
+    public void ReplaceCard(string newName, string newSuit, int newRank, Bartok.CardDefinition newDef, UnityEngine.Color newColor, string newColS) {
         var index = GameComponentsLookup.Card;
         var component = CreateComponent<Bartok.CardComponent>(index);
         component.name = newName;
         component.suit = newSuit;
         component.rank = newRank;
         component.def = newDef;
-        component.decoGOs = newDecoGOs;
         component.color = newColor;
         component.colS = newColS;
         ReplaceComponent(index, component);

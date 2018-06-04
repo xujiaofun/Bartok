@@ -8,25 +8,25 @@
 //------------------------------------------------------------------------------
 public partial class GameEntity {
 
-    public PositionComponent position { get { return (PositionComponent)GetComponent(GameComponentsLookup.Position); } }
-    public bool hasPosition { get { return HasComponent(GameComponentsLookup.Position); } }
+    public Bartok.DrawPileComponent drawPile { get { return (Bartok.DrawPileComponent)GetComponent(GameComponentsLookup.DrawPile); } }
+    public bool hasDrawPile { get { return HasComponent(GameComponentsLookup.DrawPile); } }
 
-    public void AddPosition(UnityEngine.Vector3 newValue) {
-        var index = GameComponentsLookup.Position;
-        var component = CreateComponent<PositionComponent>(index);
+    public void AddDrawPile(string newValue) {
+        var index = GameComponentsLookup.DrawPile;
+        var component = CreateComponent<Bartok.DrawPileComponent>(index);
         component.value = newValue;
         AddComponent(index, component);
     }
 
-    public void ReplacePosition(UnityEngine.Vector3 newValue) {
-        var index = GameComponentsLookup.Position;
-        var component = CreateComponent<PositionComponent>(index);
+    public void ReplaceDrawPile(string newValue) {
+        var index = GameComponentsLookup.DrawPile;
+        var component = CreateComponent<Bartok.DrawPileComponent>(index);
         component.value = newValue;
         ReplaceComponent(index, component);
     }
 
-    public void RemovePosition() {
-        RemoveComponent(GameComponentsLookup.Position);
+    public void RemoveDrawPile() {
+        RemoveComponent(GameComponentsLookup.DrawPile);
     }
 }
 
@@ -40,17 +40,17 @@ public partial class GameEntity {
 //------------------------------------------------------------------------------
 public sealed partial class GameMatcher {
 
-    static Entitas.IMatcher<GameEntity> _matcherPosition;
+    static Entitas.IMatcher<GameEntity> _matcherDrawPile;
 
-    public static Entitas.IMatcher<GameEntity> Position {
+    public static Entitas.IMatcher<GameEntity> DrawPile {
         get {
-            if (_matcherPosition == null) {
-                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.Position);
+            if (_matcherDrawPile == null) {
+                var matcher = (Entitas.Matcher<GameEntity>)Entitas.Matcher<GameEntity>.AllOf(GameComponentsLookup.DrawPile);
                 matcher.componentNames = GameComponentsLookup.componentNames;
-                _matcherPosition = matcher;
+                _matcherDrawPile = matcher;
             }
 
-            return _matcherPosition;
+            return _matcherDrawPile;
         }
     }
 }

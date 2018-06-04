@@ -11,7 +11,6 @@ namespace Bartok
         public string suit;
         public int rank;
         public CardDefinition def;
-        public List<GameObject> decoGOs;
         public Color color;
         public string colS;
     }

@@ -4,19 +4,30 @@ using System.Collections.Generic;
 
 namespace Bartok
 {
-    public sealed class CreateDeckSystem : IInitializeSystem
+    public sealed class GameStartSystem : IInitializeSystem
     {
         GameContext game;
 
-        public CreateDeckSystem(Contexts contexts)
+        public GameStartSystem(Contexts contexts)
         {
-            game = contexts.game;
+            this.game = contexts.game;
         }
 
         public void Initialize()
         {
+            InitResMgr();
+            ReadDeck();
+            MakeCards();
+        }
+
+        void InitResMgr() {
+            var prefab = Resources.Load<GameObject>("DeckResMgr");
+            var resMgr = prefab.GetComponent<DeckResMgr>();
+            this.game.SetDeckResMgr(resMgr);
+        }
+
+        void ReadDeck() {
             var txt = Resources.Load<TextAsset>("DeckXML");  // 此处不需要后缀
-            Debug.Log(txt.text);
 
             var xmlr = new PT_XMLReader();
             xmlr.Parse(txt.text);
@@ -71,10 +82,64 @@ namespace Bartok
             }
 
             this.game.SetDeck(decorators, cardDefs);
-
-            var prefab = Resources.Load<GameObject>("DeckResMgr");
-            var resMgr = prefab.GetComponent<DeckResMgr>();
-            this.game.SetDeckResMgr(resMgr);
         }
+
+        void MakeCards() {
+            var cardNames = new List<string>();
+            string[] letters = new string[]{ "C", "D", "H", "S" };
+            foreach (var s in letters)
+            {
+                for (int i = 0; i < 13; i++)
+                {
+                    cardNames.Add(s + (i+1));
+                }
+            }
+
+            List<GameEntity> cards = new List<GameEntity>();
+            for (int i = 0; i < cardNames.Count; i++)
+            {
+                var suit = cardNames[i][0].ToString();
+                var rank = int.Parse(cardNames[i].Substring(1));
+                var cardDef = this.GetCardDefinitionByRank(rank);
+                var color = Color.black;
+                var colS = "Black";
+                if (suit == "D" || suit == "H")
+                {
+                    colS = "Red";
+                    color = Color.red;
+                }
+
+                var e = this.game.CreateEntity();
+                e.AddCard(cardNames[i], suit, rank, cardDef, color, colS);
+                cards.Add(e);
+            }
+
+            this.game.SetCardCache(cards);
+        }
+
+        private CardDefinition GetCardDefinitionByRank(int rnk) {
+            foreach (var item in this.game.deck.cardDefs)
+            {
+                if (item.rank == rnk)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        private Sprite GetFace(string faceS) {
+            var resMgr = this.game.deckResMgr.value;
+            foreach (var ts in resMgr.faceSprites)
+            {
+                if (ts.name == faceS)
+                {
+                    return ts;
+                }
+            }
+            return null;
+        }
+
+
     }
 }

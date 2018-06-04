@@ -2,12 +2,14 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Entitas.Unity;
+using System;
 
 namespace Bartok
 {
     public sealed class CreateGameBoardSystem : IInitializeSystem
     {
         GameContext game;
+        Transform layoutAnchor;
 
         public CreateGameBoardSystem(Contexts contexts)
         {
@@ -16,6 +18,7 @@ namespace Bartok
 
         public void Initialize()
         {
+            game.SetGameData(null, new List<GameEntity>(), new List<GameEntity>(), new List<GameEntity>());
             var sortingLayerNames = new string[] { "Row0", "Row1", "Row2", "Row3", "Discard", "Draw" };
             var txt = Resources.Load<TextAsset>("LayoutXML");  // 此处不需要后缀
 
@@ -84,44 +87,79 @@ namespace Bartok
 
         private void SetupGameBoard(GameBoardComponent gameBoard)
         {
-            var tGO = GameObject.Find("_LayoutAnchor");
-            if (tGO == null)
-            {
-                tGO = new GameObject("_LayoutAnchor");
-                tGO.transform.position = Vector3.zero;
-            }
-            var layoutAnchor = tGO.transform;
-
             var cards = this.game.cardCache.value;
             cards.Shuffle();
-
+            int index = 0;
             for (int i = 0; i < gameBoard.slotDefs.Count; i++)
             {
                 var tSD = gameBoard.slotDefs[i];
-                var e = cards[i];
+                var e = cards[index];
                 e.AddCardState(CardState.tableau);
                 e.AddCardProspector(tSD.id, tSD);
                 e.AddFaceUp(tSD.faceUp);
-
-                var cGO = e.gameObject.value;
-                cGO.transform.parent = layoutAnchor;
-                cGO.transform.localPosition = new Vector3(
+                e.AddPosition(new Vector3(
                     gameBoard.multiplier.x * tSD.x,
                     gameBoard.multiplier.y * tSD.y,
                     -tSD.layerID
-                );
-
-                cGO.Link(e, this.game);
-                cGO.AddComponent<CardViewBehaviour>();
-
-                var spriteRenders = cGO.GetComponentsInChildren<SpriteRenderer>();
-                foreach (var tSR in spriteRenders)
-                {
-                    tSR.sortingLayerName = tSD.layerName;
-                }
-
+                ));
+                e.ReplaceSortOrder(0);
+                game.gameData.tableau.Add(e);
+                index++;
             }
 
+            MoveToTarget(cards[index], gameBoard);
+            index++;
+
+            var j = 0;
+            for (; index < cards.Count; index++)
+            {
+                game.gameData.drawPile.Add(cards[index]);
+                UpdateDrawPile(cards[index], j, gameBoard);
+                j++;
+            }
+        }
+
+        // 移动当前牌到弃牌堆
+        void MoveToDiscard(GameEntity e, GameBoardComponent gameBoard) {
+            e.ReplaceCardProspector(gameBoard.discardPile.id, gameBoard.discardPile);
+            e.ReplaceCardState(CardState.discard);
+            e.ReplaceFaceUp(false);
+            e.ReplacePosition(new Vector3(
+                gameBoard.discardPile.x * gameBoard.multiplier.x,
+                gameBoard.discardPile.y * gameBoard.multiplier.y,
+                -gameBoard.discardPile.layerID + 0.5f
+            ));
+            e.ReplaceSortOrder(-100 + game.gameData.discardPile.Count);
+            game.gameData.discardPile.Add(e);
+        }
+
+        // 使 e 成为新的目标牌
+        void MoveToTarget(GameEntity e, GameBoardComponent gameBoard) {
+            if (game.gameData.target != null)
+            {
+                MoveToDiscard(game.gameData.target, gameBoard);
+            }
+            game.gameData.target = e;
+            e.ReplaceCardProspector(gameBoard.discardPile.id, gameBoard.discardPile);
+            e.ReplaceCardState(CardState.target);
+            e.ReplaceFaceUp(false);
+            e.ReplacePosition(new Vector3(
+                gameBoard.discardPile.x * gameBoard.multiplier.x,
+                gameBoard.discardPile.y * gameBoard.multiplier.y,
+                -gameBoard.discardPile.layerID
+            ));
+            e.ReplaceSortOrder(0);
+        }
+
+        void UpdateDrawPile(GameEntity e, int i, GameBoardComponent gameBoard) {
+            e.ReplaceCardProspector(gameBoard.drawPile.id, gameBoard.drawPile);
+            e.ReplaceFaceUp(true);
+            e.ReplacePosition(new Vector3(
+                (gameBoard.drawPile.x + i * gameBoard.drawPile.stagger.x) * gameBoard.multiplier.x,
+                (gameBoard.drawPile.y + i * gameBoard.drawPile.stagger.y) * gameBoard.multiplier.y,
+                -gameBoard.discardPile.layerID + 0.1f * i
+            ));
+            e.ReplaceSortOrder(-10 * i);
         }
     }
 }
